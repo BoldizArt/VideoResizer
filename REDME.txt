@@ -1,0 +1,51 @@
+<?php
+/**
+ * @file 
+ * Contains Drupal\MYMODULE\Test\Test;
+ */
+namespace Drupal\MYMODULE\Test;
+
+use Drupal\video_resizer\Controller\Resizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+
+class Test
+{
+    /**
+     * Resize video file;
+     */
+    public function index()
+    {
+        $resolutionArray = [
+            'hd_240p',
+            'hd_720p',
+            'hd_1080p'
+        ];
+
+        $response = 0;
+        foreach ($resolutionArray as $key) {
+            // Set input data
+            $url = 'sites/default/files/';
+            $name = 'VIDEOTITLE';
+            $extension = 'mp4';
+
+            // Set output data
+            $outputUrl = 'sites/default/files/videos/';
+
+            // File permission
+            $permission = 644;
+
+            // Resize file
+            $resizer = new Resizer();
+            $resizer->setResolution($key);
+            $resizer->setInput($url, $name, $extension);
+            $resizer->setOutput($outputUrl, $outputName, $extension);
+            $resizer->setPermission($permission);
+            $out = $resizer->index();
+
+            if($out == true) $response++;
+        }
+
+        return new JsonResponse($response);
+    }
+}
